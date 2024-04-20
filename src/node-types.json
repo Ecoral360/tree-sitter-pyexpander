@@ -1,0 +1,51 @@
+[
+  {
+    "type": "code",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "source",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "code",
+          "named": true
+        },
+        {
+          "type": "text",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "text",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "$",
+    "named": false
+  },
+  {
+    "type": "(",
+    "named": false
+  },
+  {
+    "type": ")",
+    "named": false
+  },
+  {
+    "type": "\\$",
+    "named": false
+  },
+  {
+    "type": "py",
+    "named": false
+  }
+]
