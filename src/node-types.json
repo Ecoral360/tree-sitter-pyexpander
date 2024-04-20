@@ -2,7 +2,114 @@
   {
     "type": "code",
     "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "code_content",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "code_content",
+    "named": true,
     "fields": {}
+  },
+  {
+    "type": "for_cmd",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "px",
+            "named": true
+          },
+          {
+            "type": "text",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "code",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "if_cmd",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "px",
+            "named": true
+          },
+          {
+            "type": "text",
+            "named": true
+          }
+        ]
+      },
+      "elif_cmd": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "$elif",
+            "named": false
+          },
+          {
+            "type": "code",
+            "named": true
+          },
+          {
+            "type": "px",
+            "named": true
+          },
+          {
+            "type": "text",
+            "named": true
+          }
+        ]
+      },
+      "else_cmd": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "$else",
+            "named": false
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "code",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "px",
@@ -10,21 +117,29 @@
     "fields": {},
     "children": {
       "multiple": false,
-      "required": false,
+      "required": true,
       "types": [
         {
           "type": "code",
           "named": true
         },
         {
-          "type": "px_expr",
+          "type": "for_cmd",
+          "named": true
+        },
+        {
+          "type": "if_cmd",
+          "named": true
+        },
+        {
+          "type": "py_cmd",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "px_expr",
+    "type": "py_cmd",
     "named": true,
     "fields": {},
     "children": {
@@ -51,6 +166,10 @@
           "named": true
         },
         {
+          "type": "shabang_pyexpander",
+          "named": true
+        },
+        {
           "type": "text",
           "named": true
         }
@@ -60,14 +179,48 @@
   {
     "type": "text",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "dollar",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "$",
     "named": false
   },
   {
-    "type": "$#pyexpander",
+    "type": "$elif",
+    "named": false
+  },
+  {
+    "type": "$else",
+    "named": false
+  },
+  {
+    "type": "$endfor",
+    "named": false
+  },
+  {
+    "type": "$endif",
+    "named": false
+  },
+  {
+    "type": "$for",
+    "named": false
+  },
+  {
+    "type": "$if",
+    "named": false
+  },
+  {
+    "type": "$py",
     "named": false
   },
   {
@@ -79,15 +232,15 @@
     "named": false
   },
   {
-    "type": "\\$",
-    "named": false
-  },
-  {
     "type": "comment",
     "named": true
   },
   {
-    "type": "py",
-    "named": false
+    "type": "dollar",
+    "named": true
+  },
+  {
+    "type": "shabang_pyexpander",
+    "named": true
   }
 ]

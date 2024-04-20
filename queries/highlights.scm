@@ -1,12 +1,17 @@
-[
- "$#pyexpander"
-] @constant.builtin
+(source
+ (shabang_pyexpander) @constant.builtin)
 
 [
  "$"
+ "$py"
+ "$for"
+ "$if"
+ "$elif"
+ "$else"
 ] @keyword
 
-(px_expr ["(" ")"] @keyword)
+(code [ "(" ")" ] @keyword)
 
+(text (dollar) @constant)
 
 (comment) @comment

@@ -4,21 +4,59 @@ module.exports = grammar({
   extras: ($) => [$.comment],
 
   rules: {
-    source: ($) => seq(optional("$#pyexpander"), repeat(choice($.text, $.px))),
+    source: ($) =>
+      seq(
+        optional(seq(optional(/#!.*\n/), $.shabang_pyexpander)),
+        repeat($._content),
+      ),
 
-    text: (_) => prec.left(repeat1(choice("\\$", /[^$]+/))),
+    _content: ($) => choice($.text, $.px),
 
-    px: ($) => prec.right(seq("$", choice($._px_cmd, $.px_expr))),
+    text: ($) => prec(2, repeat1(choice($.dollar, /[^$\\]+/))),
 
-    _px_cmd: ($) => choice($._px_py_cmd),
-    _px_py_cmd: ($) => seq("py", $.code),
+    dollar: ($) => "\\$",
 
-    px_expr: ($) => seq("(", $.code, ")"),
+    px: ($) => prec(1, seq("$", choice($._px_cmd, $.code))),
+
+    _px_cmd: ($) => choice($.py_cmd, $.for_cmd, $.if_cmd),
+
+    py_cmd: ($) => seq(alias("py", "$py"), $.code),
+
+    for_cmd: ($) =>
+      seq(
+        alias("for", "$for"),
+        $.code,
+        field("body", repeat($._content)),
+        "$endfor",
+      ),
+
+    if_cmd: ($) =>
+      seq(
+        alias("if", "$if"),
+        $.code,
+        field("body", repeat($._content)),
+        repeat(field("elif_cmd", seq("$elif", $.code, repeat($._content)))),
+        optional(
+          field("else_cmd", seq("$else"), field("body", repeat($._content))),
+        ),
+        "$endif",
+      ),
+
+    // for_code: ($) => seq(repeat(seq($.ident, ","), optional($.ident), "in", )),
 
     code: ($) => $._code_content,
+
     _code_content: ($) =>
-      repeat1(choice(seq("(", $._code_content, ")"), /[^()]*/)),
+      seq(
+        "(",
+        alias(repeat(choice($._code_content_2, /[^()]/)), $.code_content),
+        ")",
+      ),
+
+    _code_content_2: ($) =>
+      seq("(", repeat(choice($._code_content_2, /[^()]/)), ")"),
 
     comment: ($) => token(seq("$#", /.*/)),
+    shabang_pyexpander: ($) => "$#!pyexpander",
   },
 });
