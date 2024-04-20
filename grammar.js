@@ -16,11 +16,12 @@ module.exports = grammar({
 
     _content: ($) => choice($.text, $.px),
 
-    text: ($) => prec(2, repeat1(choice($.dollar, /[^$\\]+/))),
+    text: ($) => prec(2, repeat1(choice($.dollar, /[^$\\]+/, $.wrap_line))),
 
     dollar: ($) => "\\$",
+    wrap_line: ($) => "\\\n",
 
-    px: ($) => prec(1, choice($._px_cmd, seq("$", $.code))),
+    px: ($) => prec(1, choice(seq("$", $.code), $._px_cmd)),
 
     _px_cmd: ($) =>
       choice(
@@ -33,12 +34,13 @@ module.exports = grammar({
         $.begin_cmd,
         $.extend_cmd,
         $.include_cmd,
+        $.macro_cmd,
         mk_kw("__file__"),
-        $._custom_cmd,
+        $.custom_cmd,
       ),
 
-    _custom_cmd: ($) =>
-      seq("$", alias($.ident, $.custom_cmd), optional($.code)),
+    custom_cmd: ($) =>
+      seq("$", $.ident, choice($.code, /[^(]/)),
 
     py_cmd: ($) => seq(mk_kw("py"), $.code),
 
@@ -53,6 +55,18 @@ module.exports = grammar({
         repeat(seq(",", $.ident)),
         optional(","),
         ")",
+      ),
+
+    macro_cmd: ($) =>
+      seq(
+        mk_kw("macro"),
+        "(",
+        alias($.ident, $.macro_name),
+        repeat(seq(",", alias($.ident, $.macro_arg))),
+        optional(","),
+        ")",
+        alias(repeat($._content), $.body),
+        mk_kw("endmacro"),
       ),
 
     include_cmd: ($) => seq(mk_kw("include", true), $.code),
@@ -97,7 +111,7 @@ module.exports = grammar({
 
     // for_code: ($) => seq(repeat(seq($.ident, ","), optional($.ident), "in", )),
 
-    code: ($) => seq($._code_content, optional("\\")),
+    code: ($) => $._code_content,
 
     for_code: ($) =>
       seq(

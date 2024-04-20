@@ -16,6 +16,8 @@
  "$while"
  "$while_begin"
  "$endwhile"
+ "$include"
+ "$include_begin"
  "$if"
  "$elif"
  "$else"
@@ -24,9 +26,17 @@
  "$begin"
  "$end"
  "$extend"
+ "$macro"
+ "$endmacro"
 ] @keyword
 
-(custom_cmd) @property
+(macro_cmd (macro_name) @function.method)
+(macro_cmd (macro_arg) @variable.parameter)
+(macro_cmd ["(" ")"] @keyword)
+
+(wrap_line) @comment
+
+(custom_cmd (ident) @function.call)
 
 (extend_cmd ["(" ")"] @keyword)
 (extend_cmd (ident) @property)
