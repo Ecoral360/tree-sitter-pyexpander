@@ -2,42 +2,37 @@
   "name": "pyexpander",
   "rules": {
     "source": {
-      "type": "REPEAT",
-      "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "text"
-          },
-          {
-            "type": "PREC_RIGHT",
-            "value": 0,
-            "content": {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": "$"
-                },
-                {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "_px_cmd"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "_px_expr"
-                    }
-                  ]
-                }
-              ]
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "$#pyexpander"
+            },
+            {
+              "type": "BLANK"
             }
+          ]
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "text"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "px"
+              }
+            ]
           }
-        ]
-      }
+        }
+      ]
     },
     "text": {
       "type": "PREC_LEFT",
@@ -57,6 +52,32 @@
             }
           ]
         }
+      }
+    },
+    "px": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "$"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_px_cmd"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "px_expr"
+              }
+            ]
+          }
+        ]
       }
     },
     "_px_cmd": {
@@ -81,7 +102,7 @@
         }
       ]
     },
-    "_px_expr": {
+    "px_expr": {
       "type": "SEQ",
       "members": [
         {
@@ -108,10 +129,6 @@
         "type": "CHOICE",
         "members": [
           {
-            "type": "PATTERN",
-            "value": "[^)]"
-          },
-          {
             "type": "SEQ",
             "members": [
               {
@@ -127,6 +144,26 @@
                 "value": ")"
               }
             ]
+          },
+          {
+            "type": "PATTERN",
+            "value": "[^()]*"
+          }
+        ]
+      }
+    },
+    "comment": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "$#"
+          },
+          {
+            "type": "PATTERN",
+            "value": ".*"
           }
         ]
       }
@@ -134,8 +171,8 @@
   },
   "extras": [
     {
-      "type": "PATTERN",
-      "value": "\\s"
+      "type": "SYMBOL",
+      "name": "comment"
     }
   ],
   "conflicts": [],
@@ -144,4 +181,3 @@
   "inline": [],
   "supertypes": []
 }
-

@@ -5,6 +5,40 @@
     "fields": {}
   },
   {
+    "type": "px",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "code",
+          "named": true
+        },
+        {
+          "type": "px_expr",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "px_expr",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "code",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "source",
     "named": true,
     "fields": {},
@@ -13,7 +47,7 @@
       "required": false,
       "types": [
         {
-          "type": "code",
+          "type": "px",
           "named": true
         },
         {
@@ -33,6 +67,10 @@
     "named": false
   },
   {
+    "type": "$#pyexpander",
+    "named": false
+  },
+  {
     "type": "(",
     "named": false
   },
@@ -43,6 +81,10 @@
   {
     "type": "\\$",
     "named": false
+  },
+  {
+    "type": "comment",
+    "named": true
   },
   {
     "type": "py",
