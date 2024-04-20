@@ -40,7 +40,7 @@
   "tree-sitter": [
     {
       "scope": "source.pyexpander",
-      "content-regex": "$#pyexpander",
+      "content-regex": "$#!pyexpander",
       "injection-regex": "^pyexpander$"
     }
   ]

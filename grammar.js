@@ -55,7 +55,7 @@ module.exports = grammar({
         ")",
       ),
 
-    include_cmd: $ => seq(mk_kw("include", true), $.code),
+    include_cmd: ($) => seq(mk_kw("include", true), $.code),
 
     default_cmd: ($) => seq(mk_kw("default"), $.default_code),
 
@@ -97,7 +97,7 @@ module.exports = grammar({
 
     // for_code: ($) => seq(repeat(seq($.ident, ","), optional($.ident), "in", )),
 
-    code: ($) => $._code_content,
+    code: ($) => seq($._code_content, optional("\\")),
 
     for_code: ($) =>
       seq(
@@ -106,6 +106,7 @@ module.exports = grammar({
         "in",
         alias(repeat(choice($._code_content_2, /[^()]/)), $.code_content),
         ")",
+        optional("\\"),
       ),
 
     default_code: ($) =>
@@ -128,6 +129,7 @@ module.exports = grammar({
         ),
         optional(","),
         ")",
+        optional("\\"),
       ),
 
     _code_content: ($) =>
@@ -148,11 +150,8 @@ module.exports = grammar({
 });
 
 function mk_kw(kw, add_begin = false) {
-  const t = alias(seq("$", kw), `$${kw}`);
+  const t = alias(seq("$", choice(kw, seq("{", kw, "}"))), `$${kw}`);
   if (!add_begin) return t;
 
-  return choice(
-    t,
-    alias(seq("$", `${kw}_begin`), `$${kw}_begin`),
-  );
+  return choice(t, alias(seq("$", `${kw}_begin`), `$${kw}_begin`));
 }
