@@ -1,5 +1,39 @@
 [
   {
+    "type": "begin_cmd",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "body",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "px",
+          "named": true
+        },
+        {
+          "type": "text",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "code",
     "named": true,
     "fields": {},
@@ -20,30 +54,87 @@
     "fields": {}
   },
   {
-    "type": "for_cmd",
+    "type": "default_cmd",
     "named": true,
-    "fields": {
-      "body": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "px",
-            "named": true
-          },
-          {
-            "type": "text",
-            "named": true
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
       "multiple": false,
       "required": true,
       "types": [
         {
-          "type": "code",
+          "type": "default_code",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "default_code",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "code_content",
+          "named": true
+        },
+        {
+          "type": "ident",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "extend_cmd",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "ident",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "for_cmd",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "body",
+          "named": true
+        },
+        {
+          "type": "for_code",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "for_code",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "code_content",
+          "named": true
+        },
+        {
+          "type": "ident",
           "named": true
         }
       ]
@@ -53,20 +144,6 @@
     "type": "if_cmd",
     "named": true,
     "fields": {
-      "body": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "px",
-            "named": true
-          },
-          {
-            "type": "text",
-            "named": true
-          }
-        ]
-      },
       "elif_cmd": {
         "multiple": true,
         "required": false,
@@ -76,30 +153,49 @@
             "named": false
           },
           {
+            "type": "body",
+            "named": true
+          },
+          {
             "type": "code",
-            "named": true
-          },
-          {
-            "type": "px",
-            "named": true
-          },
-          {
-            "type": "text",
             "named": true
           }
         ]
       },
       "else_cmd": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
             "type": "$else",
             "named": false
+          },
+          {
+            "type": "body",
+            "named": true
           }
         ]
       }
     },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "body",
+          "named": true
+        },
+        {
+          "type": "code",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "include_cmd",
+    "named": true,
+    "fields": {},
     "children": {
       "multiple": false,
       "required": true,
@@ -116,11 +212,27 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
-      "required": true,
+      "multiple": true,
+      "required": false,
       "types": [
         {
+          "type": "begin_cmd",
+          "named": true
+        },
+        {
           "type": "code",
+          "named": true
+        },
+        {
+          "type": "custom_cmd",
+          "named": true
+        },
+        {
+          "type": "default_cmd",
+          "named": true
+        },
+        {
+          "type": "extend_cmd",
           "named": true
         },
         {
@@ -132,7 +244,15 @@
           "named": true
         },
         {
+          "type": "include_cmd",
+          "named": true
+        },
+        {
           "type": "py_cmd",
+          "named": true
+        },
+        {
+          "type": "while_cmd",
           "named": true
         }
       ]
@@ -192,7 +312,38 @@
     }
   },
   {
+    "type": "while_cmd",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "body",
+          "named": true
+        },
+        {
+          "type": "code",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "$",
+    "named": false
+  },
+  {
+    "type": "$__file__",
+    "named": false
+  },
+  {
+    "type": "$begin",
+    "named": false
+  },
+  {
+    "type": "$default",
     "named": false
   },
   {
@@ -204,6 +355,10 @@
     "named": false
   },
   {
+    "type": "$end",
+    "named": false
+  },
+  {
     "type": "$endfor",
     "named": false
   },
@@ -212,7 +367,19 @@
     "named": false
   },
   {
+    "type": "$endwhile",
+    "named": false
+  },
+  {
+    "type": "$extend",
+    "named": false
+  },
+  {
     "type": "$for",
+    "named": false
+  },
+  {
+    "type": "$for_begin",
     "named": false
   },
   {
@@ -220,7 +387,27 @@
     "named": false
   },
   {
+    "type": "$include",
+    "named": false
+  },
+  {
+    "type": "$include_begin",
+    "named": false
+  },
+  {
     "type": "$py",
+    "named": false
+  },
+  {
+    "type": "$safemode",
+    "named": false
+  },
+  {
+    "type": "$while",
+    "named": false
+  },
+  {
+    "type": "$while_begin",
     "named": false
   },
   {
@@ -232,12 +419,32 @@
     "named": false
   },
   {
+    "type": ",",
+    "named": false
+  },
+  {
+    "type": "=",
+    "named": false
+  },
+  {
     "type": "comment",
+    "named": true
+  },
+  {
+    "type": "custom_cmd",
     "named": true
   },
   {
     "type": "dollar",
     "named": true
+  },
+  {
+    "type": "ident",
+    "named": true
+  },
+  {
+    "type": "in",
+    "named": false
   },
   {
     "type": "shabang_pyexpander",
