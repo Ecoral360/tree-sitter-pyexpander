@@ -42,7 +42,13 @@ module.exports = grammar({
     expr_cmd: ($) => seq("$", $.code),
 
     custom_cmd: ($) =>
-      seq("$", choice(seq($.ident, choice($.code, alias(/s*[^(]/, $.text))), seq("{", $.ident, "}"))),
+      seq(
+        "$",
+        choice(
+          seq($.ident, choice($.code, alias(/s*[^(]/, $.text))),
+          seq("{", $.ident, "}"),
+        ),
+      ),
 
     py_cmd: ($) => seq(mk_kw({ kw: "py", take_params: true }), $.code),
 
@@ -169,7 +175,17 @@ module.exports = grammar({
     ident: ($) => /[_\p{XID_Start}][_\p{XID_Continue}]*/,
     kw_ident: ($) => /[_A-Za-z][_A-Za-z0-9]*/,
     comment: ($) => token(seq("$", "#", /.*/)),
-    shabang_pyexpander: ($) => "$#!pyexpander",
+    shabang_pyexpander: ($) =>
+      seq(
+        token(prec(10, "$#!pyexpander")),
+        choice(
+          /\s*\n/,
+          seq(
+            ":",
+            alias(/[_\p{XID_Start}][_\p{XID_Continue}]*/, $.language_name),
+          ),
+        ),
+      ),
   },
 });
 
