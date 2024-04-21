@@ -4,6 +4,13 @@
 
 [Pyexpander][pyexpander] grammar for [tree-sitter].
 
+## Usage
+
+Add `$#!pyexpander` at the beginning of your file (or the line after the shabang)
+
+> [!IMPORTANT]
+> To set the language definition for the rest of the file, write `$#!pyexpander:LANGUAGE_NAME` instead
+
 ## Dependencies
 
 The package depends on [tree-sitter-python] for language injection.
