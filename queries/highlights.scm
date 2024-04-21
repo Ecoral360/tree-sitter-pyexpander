@@ -37,6 +37,7 @@
 (wrap_line) @comment
 
 (custom_cmd (ident) @function.call)
+(custom_cmd [ "{" "}" ] @function.call)
 
 (extend_cmd ["(" ")"] @keyword)
 (extend_cmd (ident) @property)

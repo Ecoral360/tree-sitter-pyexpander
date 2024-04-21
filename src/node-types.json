@@ -68,6 +68,10 @@
         {
           "type": "ident",
           "named": true
+        },
+        {
+          "type": "text",
+          "named": true
         }
       ]
     }
@@ -101,6 +105,40 @@
         },
         {
           "type": "ident",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "elif_cmd",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "body",
+          "named": true
+        },
+        {
+          "type": "code",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "expr_cmd",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "code",
           "named": true
         }
       ]
@@ -163,24 +201,6 @@
     "type": "if_cmd",
     "named": true,
     "fields": {
-      "elif_cmd": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "$elif",
-            "named": false
-          },
-          {
-            "type": "body",
-            "named": true
-          },
-          {
-            "type": "code",
-            "named": true
-          }
-        ]
-      },
       "else_cmd": {
         "multiple": true,
         "required": false,
@@ -206,6 +226,10 @@
         },
         {
           "type": "code",
+          "named": true
+        },
+        {
+          "type": "elif_cmd",
           "named": true
         }
       ]
@@ -262,15 +286,15 @@
           "named": true
         },
         {
-          "type": "code",
-          "named": true
-        },
-        {
           "type": "custom_cmd",
           "named": true
         },
         {
           "type": "default_cmd",
+          "named": true
+        },
+        {
+          "type": "expr_cmd",
           "named": true
         },
         {
@@ -519,5 +543,13 @@
   {
     "type": "wrap_line",
     "named": true
+  },
+  {
+    "type": "{",
+    "named": false
+  },
+  {
+    "type": "}",
+    "named": false
   }
 ]

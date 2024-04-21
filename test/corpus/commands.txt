@@ -1,0 +1,116 @@
+$#!pyexpander
+
+==================
+Command statement
+==================
+$#!pyexpander
+This is ordinary text, $# from here it is a comment
+here the text continues.
+
+this is not a command due to escaping rules: \$mycommand
+a command: $begin
+a command within a sequence of letters abc${begin}def
+a command with parameters: $for(x in range(0,3))
+$endfor
+a command with parameters and spaces: $include  ("myfile.txt")
+$end
+$end
+
+$   ("aa")
+
+$ if(a)
+
+$ elif (x)
+
+$if(a)
+a
+$ elif (x)
+
+$else
+a
+
+$endif
+
+$else
+
+a
+$endif
+
+$ss("aa")
+$aa
+
+---
+(source
+  (shabang_pyexpander)
+  (text)
+  (comment)
+  (text)
+  (text
+    (dollar))
+  (text)
+  (px
+    (begin_cmd
+      (body
+        (text)
+        (px
+          (begin_cmd
+            (body
+              (text)
+              (px
+                (for_cmd
+                  (for_code
+                    (ident)
+                    (code_content))
+                  (body
+                    (text))))
+              (text)
+              (px
+                (include_cmd
+                  (code
+                    (code_content))))
+              (text))))
+        (text))))
+  (text)
+  (px
+    (expr_cmd
+      (code
+        (code_content))))
+  (text)
+  (px
+    (if_cmd
+      (code
+        (code_content))
+      (body
+        (text))
+      (elif_cmd
+        (code
+          (code_content))
+        (body
+          (text)
+          (px
+            (if_cmd
+              (code
+                (code_content))
+              (body
+                (text))
+              (elif_cmd
+                (code
+                  (code_content))
+                (body
+                  (text)))
+              else_cmd: (body
+                (text))))
+          (text)))
+      else_cmd: (body
+        (text))))
+  (text)
+  (px
+    (custom_cmd
+      (ident)
+      (code
+        (code_content))))
+  (text)
+  (px
+    (custom_cmd
+      (ident)
+      (text))))

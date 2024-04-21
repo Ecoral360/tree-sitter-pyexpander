@@ -5,7 +5,7 @@ module.exports = grammar({
 
   word: ($) => $.kw_ident,
 
-  conflicts: ($) => [[$.if_cmd]],
+  conflicts: ($) => [[$.elif_cmd]],
 
   rules: {
     source: ($) =>
@@ -21,11 +21,11 @@ module.exports = grammar({
     dollar: ($) => "\\$",
     wrap_line: ($) => "\\\n",
 
-    px: ($) => prec(1, choice(seq("$", $.code), $._px_cmd)),
+    px: ($) => choice($.expr_cmd, $._px_cmd),
 
     _px_cmd: ($) =>
       choice(
-        mk_kw("safemode"),
+        mk_kw({ kw: "safemode" }),
         $.py_cmd,
         $.for_cmd,
         $.while_cmd,
@@ -35,21 +35,27 @@ module.exports = grammar({
         $.extend_cmd,
         $.include_cmd,
         $.macro_cmd,
-        mk_kw("__file__"),
+        mk_kw({ kw: "__file__" }),
         $.custom_cmd,
       ),
 
-    custom_cmd: ($) =>
-      seq("$", $.ident, choice($.code, /[^(]/)),
+    expr_cmd: ($) => seq("$", $.code),
 
-    py_cmd: ($) => seq(mk_kw("py"), $.code),
+    custom_cmd: ($) =>
+      seq("$", choice(seq($.ident, choice($.code, alias(/s*[^(]/, $.text))), seq("{", $.ident, "}"))),
+
+    py_cmd: ($) => seq(mk_kw({ kw: "py", take_params: true }), $.code),
 
     begin_cmd: ($) =>
-      seq(mk_kw("begin"), alias(repeat($._content), $.body), mk_kw("end")),
+      seq(
+        mk_kw({ kw: "begin" }),
+        alias(repeat($._content), $.body),
+        mk_kw({ kw: "end" }),
+      ),
 
     extend_cmd: ($) =>
       seq(
-        mk_kw("extend"),
+        mk_kw({ kw: "extend", take_params: true }),
         "(",
         $.ident,
         repeat(seq(",", $.ident)),
@@ -59,54 +65,58 @@ module.exports = grammar({
 
     macro_cmd: ($) =>
       seq(
-        mk_kw("macro"),
+        mk_kw({ kw: "macro", take_params: true }),
         "(",
         alias($.ident, $.macro_name),
         repeat(seq(",", alias($.ident, $.macro_arg))),
         optional(","),
         ")",
         alias(repeat($._content), $.body),
-        mk_kw("endmacro"),
+        mk_kw({ kw: "endmacro" }),
       ),
 
-    include_cmd: ($) => seq(mk_kw("include", true), $.code),
+    include_cmd: ($) =>
+      seq(mk_kw({ kw: "include", add_begin: true, take_params: true }), $.code),
 
-    default_cmd: ($) => seq(mk_kw("default"), $.default_code),
+    default_cmd: ($) =>
+      seq(mk_kw({ kw: "default", take_params: true }), $.default_code),
 
     for_cmd: ($) =>
       seq(
-        mk_kw("for", true),
+        mk_kw({ kw: "for", add_begin: true, take_params: true }),
         $.for_code,
         alias(repeat($._content), $.body),
-        mk_kw("endfor"),
+        mk_kw({ kw: "endfor" }),
       ),
 
     while_cmd: ($) =>
       seq(
-        mk_kw("while", true),
+        mk_kw({ kw: "while", add_begin: true, take_params: true }),
         $.code,
         alias(repeat($._content), $.body),
-        mk_kw("endwhile"),
+        mk_kw({ kw: "endwhile" }),
       ),
 
     if_cmd: ($) =>
       seq(
-        mk_kw("if"),
+        mk_kw({ kw: "if", take_params: true }),
         $.code,
         alias(repeat($._content), $.body),
-        repeat(
-          field(
-            "elif_cmd",
-            seq(mk_kw("elif"), $.code, alias(repeat($._content), $.body)),
-          ),
-        ),
+        repeat($.elif_cmd),
         optional(
           field(
             "else_cmd",
-            seq(mk_kw("else"), alias(repeat($._content), $.body)),
+            seq(mk_kw({ kw: "else" }), alias(repeat($._content), $.body)),
           ),
         ),
-        mk_kw("endif"),
+        mk_kw({ kw: "endif" }),
+      ),
+
+    elif_cmd: ($) =>
+      seq(
+        mk_kw({ kw: "elif", take_params: true }),
+        $.code,
+        alias(repeat($._content), $.body),
       ),
 
     // for_code: ($) => seq(repeat(seq($.ident, ","), optional($.ident), "in", )),
@@ -158,13 +168,17 @@ module.exports = grammar({
 
     ident: ($) => /[_\p{XID_Start}][_\p{XID_Continue}]*/,
     kw_ident: ($) => /[_A-Za-z][_A-Za-z0-9]*/,
-    comment: ($) => token(seq("$#", /.*/)),
+    comment: ($) => token(seq("$", "#", /.*/)),
     shabang_pyexpander: ($) => "$#!pyexpander",
   },
 });
 
-function mk_kw(kw, add_begin = false) {
-  const t = alias(seq("$", choice(kw, seq("{", kw, "}"))), `$${kw}`);
+function mk_kw({ kw, add_begin = false, take_params = false }) {
+  let keyword = kw;
+  if (!take_params) {
+    keyword = choice(kw, seq("{", kw, "}"));
+  }
+  const t = alias(seq("$", keyword), `$${kw}`);
   if (!add_begin) return t;
 
   return choice(t, alias(seq("$", `${kw}_begin`), `$${kw}_begin`));

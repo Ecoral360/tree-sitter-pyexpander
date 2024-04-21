@@ -41,6 +41,7 @@
     {
       "scope": "source.pyexpander",
       "content-regex": "$#!pyexpander",
+      "first-line-regex": "$#!pyexpander",
       "injection-regex": "^pyexpander$"
     }
   ]
